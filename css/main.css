@@ -1,0 +1,21 @@
+p {
+    padding-left:30px; 
+    padding-right:30px; 
+    font-family: 'Times New Roman',Times,serif;
+    font-size: 14px;
+}
+
+label {
+ font-size: 13px;
+ font-weight: 700;
+ color: #1c87c9;
+}
+
+input { 
+ font-size: 12px;
+ font-weight: 700;
+}
+
+form input[name="phoneprice"] {
+text-transform: lowercase;
+}
