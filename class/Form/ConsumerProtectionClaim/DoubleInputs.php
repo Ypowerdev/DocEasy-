@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Form\ConsumerProtectionClaim;
@@ -8,24 +9,24 @@ class DoubleInputs
         [
             [
             'title' => 'Дополнительные аксессуары к смартфону',
-            'name' => 'accesorries1',
+            'name' => 'accesoriesArrName[]',
             'placeholder' => 'Дополнительные аксессуары (например, защитная плёнка)',
             ],
             [
             'title' => 'Стоимость аксессуара',
-            'name' => 'priceAccesorries1',
+            'name' => 'accesoriesArrPrice[]',
             'placeholder' => 0,
             ]
         ],
         [
             [
             'title' => 'Дополнительные аксессуары (например, ПО, антивирус и т.д.)',
-            'name' => 'accesorries2',
+            'name' => 'accesoriesArrName[]',
             'placeholder' => 'Дополнительные аксессуары (например, защитная плёнка)',
             ],
             [
             'title' => 'Стоимость аксессуара',
-            'name' => 'priceAccesorries2',
+            'name' => 'accesoriesArrPrice[]',
             'placeholder' => 0,
             ]
         ],
