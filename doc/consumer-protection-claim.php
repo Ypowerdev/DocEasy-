@@ -1,61 +1,87 @@
-<?php 
+<?php
 
+class DocFiller 
+{ 
+    private float $phonePrice; 
+    private array $accesoriesArrName; 
+    private array $accesoriesArrPrice; 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
-
-    $search = [];
-    $replace = [];
-
-    foreach($_POST as $fieldName => $fieldValue) {
-       $$fieldName = $fieldValue;          
-       $search[] = "{{$fieldName}}";
-       $replace[] = $fieldValue;
+    public function __construct(array $post)
+    { 
+        $this->phonePrice = $post['phonePrice']; 
+        $this->accesoriesArrName = $post['accesoriesArrName']; 
+        $this->accesoriesArrPrice = $post['accesoriesArrPrice']; 
     }
-    
 
-    if(!empty($accesoriesArrName[0] && !empty($accesoriesArrName[1]))){ 
-        $firstSentence = "<p>Также для совестного использования с указанным смартфоном были приобретены дополнительно:" . "&nbsp;". mb_strtolower($accesoriesArrName[0]) . "стоимостью" . "&nbsp;". mb_strtolower($accesoriesArrPrice[0]) ."&nbsp;". "рублей  и" ."&nbsp;". mb_strtolower($accesoriesArrName[1]) . "&nbsp;" ."стоимостью" . "&nbsp;" . mb_strtolower($accesoriesArrPrice[1]) . "&nbsp;" . "рублей.</p>";      
-    }elseif(!empty($accesoriesArrName[0])){ 
-        $secondSentence = "<p>Также для совестного использования с указанным смартфоном были приобретены дополнительно:" . "&nbsp;" . mb_strtolower($accesoriesArrName[0]) . "&nbsp;". "стоимостью" . "&nbsp;" . mb_strtolower($accesoriesArrPrice[0]) . "&nbsp;" . "рублей.</p>"; 
-    }elseif(!empty($accesoriesArrName[1])){ 
-        $thirdSentence =  "<p>Также для совестного использования с указанным смартфоном были приобретены дополнительно:" . "&nbsp;" . mb_strtolower($accesoriesArrName[1]) . "&nbsp;" . "стоимостью" . "&nbsp;" . mb_strtolower($accesoriesArrPrice[1]) . "&nbsp;". "рублей.</p>"; 
-    }else{ 
-        echo ""; 
+    private function generateSentences(): string
+    {
+        $sentences = []; 
+        if(count($this->accesoriesArrName)){ 
+            foreach ($this->accesoriesArrName as $key => $value) {
+                if (!empty($value)) {
+                    $sentences[] = mb_strtolower($value) . "стоимостью&nbsp;" . $this->accesoriesArrPrice[$key] . "&nbsp;рублей";
+                }
+            }
+            return '<p>Также для совестного использования с указанным смартфоном были приобретены дополнительно:&nbsp'
+            . implode(' и ', $sentences); 
+        }
+        return ''; 
     }
-    
-    $search[] = '{{firstSentence}}'; 
-    $search[] = '{{secondSentence}}'; 
-    $search[] = '{{thirdSentence}}'; 
-    $replace[] = $firstSentence; 
-    $replace[] = $secondSentence; 
-    $replace[] = $thirdSentence; 
 
-    $accesoriesPrice = 0;
+    private function calculateAcessoriesPrice(): float 
+    { 
+        $accesoriesPrice = 0;
 
-    foreach ($accesoriesArrPrice as $key => $value){
-       $accesoriesPrice += $accesoriesArrPrice[$key]; 
-    }     
-    
-    
-    $accesoriesHolder = "<p>2. Сумму в размере" . "&nbsp;" . $accesoriesPrice . "&nbsp;" . "рублей (стоимость дополнительных аксессуаров).";
+        foreach ($this->accesoriesArrPrice as $key => $value) {
+            $accesoriesPrice += $this->accesoriesArrPrice[$key];
+    }    
+        return $accesoriesPrice; 
+    }
 
-    $search[] = '{{accesoriesHolder}}';
-    $replace[] =  $accesoriesHolder;
+    private function calculateTotalPrice(): float 
+    { 
+        $totalPrice = $this->phonePrice+$this->calculateAcessoriesPrice();
+        return $totalPrice; 
+    }    
+       
+    public function generateHtmlTemplate() 
+    { 
+        if($_SERVER["REQUEST_METHOD"] != "POST"){ 
+            return ''; 
+        } 
+        
+        $search = []; 
+        $replace = []; 
+        
+        foreach ($_POST as $fieldName => $fieldValue) {
+            $$fieldName = $fieldValue;
+            $search[] = "{{{$fieldName}}}";
+            $replace[] = $fieldValue;
+        } 
 
-    $totalPrice = $phonePrice + $accesoriesPrice;
-    $totalHolder = "<p>А всего:" . "&nbsp;". $totalPrice ."&nbsp;". "рублей.</p>";
+        $sentences = $this->generateSentences(); 
 
-    $search[] = '{{totalHolder}}';
-    $replace[] =  $totalHolder;
+        $search[] = '{{sentences}}'; 
+        $replace[] = $sentences; 
 
-    //получаем текст из файла, по названию файла
-    $textTemplate = file_get_contents('template-requirements.html');
+        $acessoriesHolder = "<p> 2. Сумму в размере" . "&nbsp;" . $this->calculateAcessoriesPrice() . "&nbsp;" . "рублей (стоимость дополнительных аксессуаров).";
+        
+        $search[] = '{{accesoriesHolder}}';
+        $replace[] = $accesoriesHolder;   
 
-    // находим шаблоны вида {{param}} и заменяем на актуальное содержимое
-    $textReplaced = str_replace($search, $replace, $textTemplate);
+        $totalHolder = "<p>А всего:" . "&nbsp;" . $this->calculateTotalPrice() . "&nbsp;" . "рублей.</p>";
 
-    // выводим результат
-    echo $textReplaced;
+        $search[] = '{{totalHolder}}'; 
+        $replace[] = $totalHolder; 
+
+        $textTemplate = file_get_contents('template-requirements.html');
+
+        $textReplaced = str_replace($search, $replace, $textTemplate);
+
+        echo $textReplaced;
+
+    }
 } 
-
-?>
+   
+$docFiller = new DocFiller($_POST); 
+$docFiller -> generateHtmlTemplate(); 
