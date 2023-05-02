@@ -1,2 +1,2 @@
 # DocEasy-
-Autocomplete Legal Documents Project
+Creation of Legal Documents 
