@@ -5,6 +5,6 @@ return [
         'host' => 'localhost', 
         'dbname' => 'doceasy',
         'user' => 'root', 
-        'password' => '#%AOtud8+k<7',
+        'password' => '********',
     ] 
 ];
