@@ -12,10 +12,8 @@ spl_autoload_register(function(string $className) {
 $route = $_GET['route'] ?? '';
 $routes = require __DIR__ . '/../doceasy1/routes.php';
 
-
 try{ 
-(new App\Router\Router($routes))->callAction($route);
+  (new App\Router\Router($routes))->callAction($route);
 }catch (\App\Exception\RouteNotFound $exception){ 
-    echo 'Страница c роутом ' . $exception->getRoute() . ' не найдена'; 
-    http_response_code(404); 
+  (new App\Classes\Controllers\ErrorController())->notFoundAction($exception);    
 }
