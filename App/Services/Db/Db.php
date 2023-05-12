@@ -9,7 +9,7 @@ class Db
     /** @var \PDO */
     private $pdo; 
 
-    public function __construct()
+    private function __construct()
     { 
         $dbOptions = (require APPLICATION_PATH . '/db_settings.php')['db']; 
 
