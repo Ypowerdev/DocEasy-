@@ -2,11 +2,13 @@
 
 namespace App\Classes\Controllers;
 
-use App\DocumentParams\DocumentParams; 
+use App\Exception\CustomException; 
+use App\DocumentParams\PostExtractor;
 use App\ViewHelper\SentencesGenerator; 
 use App\View\View; 
+use App\DocumentParams\DocumentParams; 
 
-class DocFillerController implements PostableInterface 
+class DocFillerController implements PostableInterface  
 { 
     private array $postParams=[]; 
     private View $view; 
@@ -30,14 +32,15 @@ class DocFillerController implements PostableInterface
         'docMonth', 'docYear', 'claimDate',  'claimMonth', 'claimYear' 
        ]; 
 
-       $simpleFields = [];
-       foreach($simpleFieldsNames as $simpleFieldName){
-        if (!isset($this->postParams[$simpleFieldName])){ 
-            echo 'Поле' . '"' . $simpleFieldName . '"' . 'не заполнено'; 
-        } 
-         $simpleFields[$simpleFieldName] = $this->postParams[$simpleFieldName];
-       }     
-    		
+       
+    try{ 
+        $simpleFields = (new PostExtractor())->exctractFields($simpleFieldsNames, $this->postParams); 
+    }catch(CustomException $exception){ 
+        foreach ($exception->getFields() as $field){ 
+            echo "Поле $fields не заполнено"; 
+        }       
+    }
+              		
        $sentences = [];  
        $accesories = []; 
        $total = [];      
@@ -53,7 +56,7 @@ class DocFillerController implements PostableInterface
 
        $sentences[] = $firstSentence; 
        
-       $accesoriesHolder = "<p> 2. Сумму в размере" . "&nbsp;" . $documentParams->calculateAcessoriesPrice() . "&nbsp;" . "рублей (стоимость дополнительных аксессуаров).";
+       $accesoriesHolder = "<p> 2. Сумму в размере" . "&nbsp;" . $documentParams->calculateAcessoriesPrice() . "&nbsp;" . "рублей (стоимость дополнительных аксессуаров)</p>.";
         
        $accesories[] = $accesoriesHolder; 
 
@@ -83,7 +86,7 @@ class DocFillerController implements PostableInterface
            (array) $this->postParams['accesoriesArrName'],            
            (array) $this->postParams['accesoriesArrPrice']
         );                
-    }
+    }   
 }
 
 
