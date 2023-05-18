@@ -21,7 +21,7 @@ class PostExtractor
         if (count($errorFields) > 0){ 
             throw new CustomException($errorFields); 
         } 
-
+        
         return $simpleFields;      
     }
 }
