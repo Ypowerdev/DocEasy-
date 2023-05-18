@@ -3,8 +3,7 @@
 namespace App\Router; 
 
 use App\Exception\RouteNotFound; 
-use App\Exception\MethodNotFound; 
-use App\Classes\Controllers\DocFillerController; 
+use App\Classes\Controllers\PostExtractor; 
 use App\Classes\Controllers\PostableInterface; 
 
 class Router 
@@ -19,13 +18,13 @@ class Router
     public function callAction ($route): void 
     { 
 
-    $isRouteFound = false;
-    foreach ($this->routes as $pattern => $controllerAndAction) {
-        preg_match($pattern, $route, $matches);
+        $isRouteFound = false;
+        foreach ($this->routes as $pattern => $controllerAndAction) {
+            preg_match($pattern, $route, $matches);
             if (!empty($matches)) {
                 $isRouteFound = true;
                     break;
-                }
+            }
     }
 
     if (!$isRouteFound) {
@@ -42,10 +41,11 @@ class Router
     if ($controller instanceof PostableInterface){ 
         $controller->setPostParams($_POST);       
     }  
-    $controller->$actionName(...$matches);  
+        $controller->$actionName(...$matches);  
     }
 }  
  
+    
     
     
 
