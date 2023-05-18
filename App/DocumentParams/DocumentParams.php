@@ -19,17 +19,15 @@ class DocumentParams
     }    
 
     public function calculateAcessoriesPrice(): float 
-    { 
-                
+    {                 
         $accesoriesPrice = 0;
         if (!count($this->accesoriesArrPrice)){ 
             return '';
         }
-
+       
         foreach ($this->accesoriesArrPrice as $key => $value) {
-            $accesoriesPrice += $this->accesoriesArrPrice[$key];
+            $accesoriesPrice += (int) $this->accesoriesArrPrice[$key];            
         }
         return $accesoriesPrice; 
-    }
-   
+    }   
 }
