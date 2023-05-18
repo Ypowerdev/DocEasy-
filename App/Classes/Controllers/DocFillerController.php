@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Classes\Controllers;
 
@@ -20,26 +20,25 @@ class DocFillerController implements PostableInterface
 
     public function generateHtmlTemplate() 
     {                
-       $documentParams = $this->createDocumentParams(); 
+        $documentParams = $this->createDocumentParams(); 
 
-       $sentencesGenerator = new SentencesGenerator(); 
+        $sentencesGenerator = new SentencesGenerator(); 
         
-       $simpleFieldsNames = 
-       [ 
+        $simpleFieldsNames = 
+        [ 
         'companyName', 'companyAdress', 'claimantName', 'claimantAdress', 
         'shopName', 'phonePrice', 'warrantyTerm', 'date', 'month', 'year', 
         'phoneName', 'phoneColor', 'imei', 'flawDescription', 'docDate', 
         'docMonth', 'docYear', 'claimDate',  'claimMonth', 'claimYear' 
-       ]; 
-
-       
+        ]; 
+          
     try{ 
         $simpleFields = (new PostExtractor())->exctractFields($simpleFieldsNames, $this->postParams); 
     }catch(CustomException $exception){ 
         foreach ($exception->getFields() as $field){ 
-            echo "Поле $fields не заполнено"; 
+            echo "Поле $field не заполнено"; 
         }       
-    }
+     }
               		
        $sentences = [];  
        $accesories = []; 
@@ -56,11 +55,11 @@ class DocFillerController implements PostableInterface
 
        $sentences[] = $firstSentence; 
        
-       $accesoriesHolder = "<p> 2. Сумму в размере" . "&nbsp;" . $documentParams->calculateAcessoriesPrice() . "&nbsp;" . "рублей (стоимость дополнительных аксессуаров)</p>.";
+       $accesoriesHolder = "2. Сумму в размере" . "&nbsp;" . $documentParams->calculateAcessoriesPrice() . "&nbsp;" . "рублей (стоимость дополнительных аксессуаров).";
         
        $accesories[] = $accesoriesHolder; 
 
-       $totalHolder = "<p>А всего:" . "&nbsp;" . $documentParams->calculateTotalPrice() . "&nbsp;" . "рублей.</p>";
+       $totalHolder = "А всего:" . "&nbsp;" . $documentParams->calculateTotalPrice() . "&nbsp;" . "рублей.";
 
        $total[] = $totalHolder;  
                 
@@ -88,6 +87,10 @@ class DocFillerController implements PostableInterface
         );                
     }   
 }
+
+
+
+   
 
 
 
