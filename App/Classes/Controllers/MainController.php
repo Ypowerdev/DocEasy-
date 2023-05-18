@@ -2,7 +2,6 @@
 
 namespace App\Classes\Controllers;
 
-
 use App\View\View; 
 use App\Services\Db\Db;
 
@@ -21,8 +20,7 @@ class MainController
     {
         $links = $this->db->query('SELECT * FROM `main_list`;');              
         $this->view->renderHtml('main/main.php', ['links' => $links]);
-    }
-
-    
+    }    
 }
+    
     
