@@ -2,8 +2,6 @@
 
 session_start();
 
-define('APPLICATION_PATH', __DIR__); 
-
 include 'vendor/autoload.php';
 
 $route = $_GET['route'] ?? '';
