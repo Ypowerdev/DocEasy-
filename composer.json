@@ -1,0 +1,19 @@
+{
+    "name": "yury/doceasywww",
+    "description": "doceasy",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yury Videnin",
+            "email": "yuryhhp@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": { 
+        "psr-4": { 
+            "App\\": "src"
+        }
+    }
+}
